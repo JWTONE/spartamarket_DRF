@@ -1,12 +1,14 @@
+from functools import partial
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import get_object_or_404, request
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.request import Request
 
 from accounts import serializers
 from .serializers import ProductsSerializer
@@ -27,10 +29,11 @@ class ProductsListAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
     
-    def put(self, request, username):
-        update = get_object_or_404(Products, username=username)
-        serializer = ProductsSerializer(update, data=request.data)
+    def put(self, request, productID):
+        
+        update = get_object_or_404(Products, id=productID)
+        serializer = ProductsSerializer(update, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save(username=request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
