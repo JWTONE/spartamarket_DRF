@@ -1,10 +1,8 @@
 from django.urls import path
-from . import views
+from .views import UserCreateAPIView, UserLoginAPIView, UserProfileAPIView
 
-app_name = "articles"
 urlpatterns = [
-    path("html/", views.article_list_html, name="article_list_html"),
-    path("json-01/", views.json_01, name="json_01"),
-    path("json-02/", views.json_02, name="json_02"),
-    path("json-drf/", views.json_drf, name="json_drf"),
+    path('api/accounts', UserCreateAPIView.as_view(), name='user-create'),
+    path('api/accounts/login', UserLoginAPIView.as_view(), name='user-login'),
+    path('api/accounts/<str:username>', UserProfileAPIView.as_view(), name='user-profile'),
 ]

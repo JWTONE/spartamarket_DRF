@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django_seed',
     'accounts',
     'products',
-    'django-restfulframework'
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -74,6 +74,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'spartamarket_DRF.wsgi.application'
 
+
+AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

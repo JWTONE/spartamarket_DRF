@@ -22,7 +22,7 @@ class UserLoginAPIView(APIView):
         if user and user.check_password(password):
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'error': '사용자 이름 또는 비밀번호가 잘못되었습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class UserProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -32,4 +32,4 @@ class UserProfileAPIView(APIView):
         if user.username == username:
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({'error': 'You do not have permission to access this profile'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': '이 프로필에 액세스할 수 있는 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
