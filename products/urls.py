@@ -10,6 +10,5 @@ from rest_framework_simplejwt.views import (
 app_name = "products"
 urlpatterns = [
     path('', ProductsListAPIView.as_view(), name='products'),
-    path('products/',ProductsListAPIView.as_view(), name='products_view'),
-    path('products/', ProductsListAPIView.as_view(), name='products_correction')
+    path('<int:productID>/', ProductsListAPIView.as_view(), name='products_correction')
 ]
