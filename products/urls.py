@@ -1,14 +1,15 @@
 from django.urls import path
-from .views import UserCreateAPIView, UserProfileAPIView
+
+from products.models import Products  # 수정된 부분: Products -> Product로 변경
+from .views import ProductsListAPIView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
-app_name = "accounts"
+app_name = "products"
 urlpatterns = [
-    path('', UserCreateAPIView.as_view(), name='user-create'),
-    path('login/', TokenObtainPairView.as_view(), name='user-login'),
-    path('<str:username>/', UserProfileAPIView.as_view(), name='user-profile'),
-    path('signup/', UserCreateAPIView.as_view(), name='signup'),
+    path('', ProductsListAPIView.as_view(), name='products'),
+    path('products/',ProductsListAPIView.as_view(), name='products_view'),
+    path('products/', ProductsListAPIView.as_view(), name='products_correction')
 ]
