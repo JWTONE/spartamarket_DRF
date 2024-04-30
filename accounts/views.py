@@ -33,5 +33,4 @@ class UserProfileAPIView(APIView):
         if user == get_object_or_404(User, username=username):
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
