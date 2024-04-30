@@ -7,7 +7,6 @@ class User(AbstractUser):
     name = models.CharField(max_length=30, default='')
     email = models.EmailField(unique=True)
     nickname = models.CharField(max_length=30)
-    birthdate = models.DateField()
     gender_choices = [
         ('M', '남성'),
         ('F', '여성'),
