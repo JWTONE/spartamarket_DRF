@@ -26,10 +26,12 @@ class UserLoginAPIView(APIView):
         return Response({'error': '사용자 이름 또는 비밀번호가 잘못되었습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class UserProfileAPIView(APIView):
-    # permission_classes = [IsAuthenticated]
-    # 이건 나중에 로그인 검증 따로하면됨 (태훈좌)
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
-        user = get_object_or_404(User, username=username)
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        user = request.user
+        if user == get_object_or_404(User, username=username):
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
