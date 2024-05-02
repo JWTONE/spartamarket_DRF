@@ -14,3 +14,4 @@ class User(AbstractUser):
     ]
     gender = models.CharField(max_length=1, choices=gender_choices, blank=True)
     introduction = models.TextField(blank=True)
+    birthday = models.DateField(null=True, blank=True)

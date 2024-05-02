@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'name', 'birthday']
+        fields = ['username', 'password', 'email', 'name', 'birthday', 'nickname']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
