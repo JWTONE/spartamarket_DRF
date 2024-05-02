@@ -8,6 +8,7 @@ from .models import User
 from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.hashers import check_password
 
 class UserCreateAPIView(APIView):
     def post(self, request):
@@ -16,6 +17,17 @@ class UserCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        user = request.user
+        password = request.data.get('password')
+
+        if not check_password(password, user.password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.delete()
+
+        return Response({"message": "계정이 성공적으로 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
 
 class UserLoginAPIView(APIView):
     def post(self, request):
@@ -59,3 +71,4 @@ class UserLogoutAPIView(APIView):
         except Exception as e:
             print("에러 발생:", e)  # 이 부분에 print 문 추가
             return Response({"error": "로그아웃에 실패했습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        
