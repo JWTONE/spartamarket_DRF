@@ -8,7 +8,7 @@ from .models import User
 from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 
 class UserCreateAPIView(APIView):
     def post(self, request):
@@ -64,11 +64,30 @@ class UserLogoutAPIView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
-            print("Refresh 토큰:", refresh_token)  # 이 부분에 print 문 추가
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response({"message": "로그아웃 되었습니다."}, status=status.HTTP_200_OK)
         except Exception as e:
-            print("에러 발생:", e)  # 이 부분에 print 문 추가
             return Response({"error": "로그아웃에 실패했습니다."}, status=status.HTTP_400_BAD_REQUEST)
         
+class UserPasswordChangeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+
+        if old_password == new_password:
+            return Response({"error": "기존 패스워드와 새로운 패스워드는 동일할 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if len(new_password) < 8:
+            return Response({"error": "새로운 패스워드는 최소 8자 이상이어야 합니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not check_password(old_password, user.password):
+            return Response({"error": "기존 패스워드가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.password = make_password(new_password)
+        user.save()
+
+        return Response({"message": "패스워드가 성공적으로 변경되었습니다."}, status=status.HTTP_200_OK)
